@@ -1,0 +1,205 @@
+THIRD-PARTY SOFTWARE NOTICES AND INFORMATION
+==============================================
+
+GlassPDF incorporates third-party open-source software components.
+The following notices are provided in compliance with their respective licenses.
+
+
+================================================================================
+1. pdfjs-dist v3.11.174
+   Copyright Mozilla Foundation
+   License: Apache License 2.0
+   https://github.com/nicolo-ribaudo/pdfjs-dist
+================================================================================
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+================================================================================
+2. class-variance-authority v0.7.1
+   Copyright Joe Bell
+   License: Apache License 2.0
+   https://github.com/joe-bell/cva
+================================================================================
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+================================================================================
+3. React v19.2.4
+   Copyright (c) Meta Platforms, Inc. and affiliates.
+   License: MIT
+   https://github.com/facebook/react
+================================================================================
+
+================================================================================
+4. Next.js v15.5.9
+   Copyright (c) Vercel, Inc.
+   License: MIT
+   https://github.com/vercel/next.js
+================================================================================
+
+================================================================================
+5. Framer Motion v11.18.2
+   Copyright (c) Framer B.V.
+   License: MIT
+   https://github.com/framer/motion
+================================================================================
+
+================================================================================
+6. pdf-lib v1.17.1
+   Copyright (c) Andrew Dillon
+   License: MIT
+   https://github.com/Hopding/pdf-lib
+================================================================================
+
+================================================================================
+7. ag-psd v30.1.0
+   Copyright (c) AgeSlawek
+   License: MIT
+   https://github.com/nicolo-ribaudo/ag-psd
+================================================================================
+
+================================================================================
+8. heic2any v0.0.4
+   Copyright (c) AlexxNB
+   License: MIT
+   https://github.com/nicolo-ribaudo/heic2any
+================================================================================
+
+================================================================================
+9. Lucide React v0.575.0
+   Copyright (c) Lucide Contributors
+   License: ISC
+   https://github.com/lucide-icons/lucide
+================================================================================
+
+================================================================================
+10. Radix UI Primitives
+    (@radix-ui/react-checkbox, @radix-ui/react-dialog,
+     @radix-ui/react-slot, @radix-ui/react-toast)
+    Copyright (c) WorkOS
+    License: MIT
+    https://github.com/radix-ui/primitives
+================================================================================
+
+================================================================================
+11. Tailwind CSS v3.4.17
+    Copyright (c) Tailwind Labs, Inc.
+    License: MIT
+    https://github.com/tailwindlabs/tailwindcss
+================================================================================
+
+================================================================================
+12. tailwindcss-animate v1.0.7
+    Copyright (c) Jamie Kyle
+    License: MIT
+    https://github.com/jamiebuilds/tailwindcss-animate
+================================================================================
+
+================================================================================
+13. tailwind-merge v3.5.0
+    Copyright (c) Dany Castillo
+    License: MIT
+    https://github.com/dcastil/tailwind-merge
+================================================================================
+
+================================================================================
+14. clsx v2.1.1
+    Copyright (c) Luke Edwards
+    License: MIT
+    https://github.com/lukeed/clsx
+================================================================================
+
+================================================================================
+15. Zod v3.24.2
+    Copyright (c) Colin McDonnell
+    License: MIT
+    https://github.com/colinhacks/zod
+================================================================================
+
+================================================================================
+16. Embla Carousel React v8.6.0
+    Copyright (c) David Jerleke
+    License: MIT
+    https://github.com/davidjerleke/embla-carousel
+================================================================================
+
+================================================================================
+17. PostCSS v8.5.6
+    Copyright (c) Andrey Sitnik
+    License: MIT
+    https://github.com/postcss/postcss
+================================================================================
+
+================================================================================
+18. shadcn/ui Components (vendored)
+    Copyright (c) shadcn
+    License: MIT
+    https://github.com/shadcn-ui/ui
+================================================================================
+
+================================================================================
+19. Inter Font
+    Copyright (c) Rasmus Andersson
+    License: SIL Open Font License 1.1
+    https://github.com/rsms/inter
+================================================================================
+
+
+MIT License Notice
+==================
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+ISC License Notice
+==================
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
