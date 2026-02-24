@@ -3,6 +3,10 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'About Us | GlassPDF',
     description: 'GlassPDF is a privacy-first document tool that runs entirely on your device.',
+    robots: {
+        index: false,
+        follow: true,
+    }
 };
 
 export default function AboutPage() {

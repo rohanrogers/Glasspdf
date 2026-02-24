@@ -3,6 +3,10 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
     title: 'Terms and Conditions | GlassPDF',
     description: 'Terms and Conditions governing the use of GlassPDF.',
+    robots: {
+        index: false,
+        follow: true,
+    }
 };
 
 export default function TermsPage() {
