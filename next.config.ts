@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  trailingSlash: false,
   output: 'export',
   serverExternalPackages: ['pdfjs-dist'],
   webpack: (config) => {
