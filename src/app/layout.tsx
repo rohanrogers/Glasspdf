@@ -1,10 +1,32 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'GlassPDF | Browser-Native PDF Studio',
-  description: 'Professional-grade PDF tools that run entirely in your browser. Merge, split, and compress with absolute privacy.',
+  title: 'GlassPDF | Privacy First PDF Tools  Merge, Split, Compress and psd preview',
+  description: 'Privacy first PDF tools that run entirely in your browser. Merge, split, compress, view, and convert PDFs locally. No uploads. No servers. Fully secure.',
+  openGraph: {
+    title: 'GlassPDF | Privacy First PDF Tools  Merge, Split, Compress and psd preview',
+    description: 'Privacy first PDF tools that run entirely in your browser. Merge, split, compress, view, and convert PDFs locally. No uploads. No servers. Fully secure.',
+    url: 'https://glasspdf.pages.dev/',
+    siteName: 'GlassPDF',
+    images: [
+      {
+        url: 'https://glasspdf.pages.dev/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'GlassPDF - Privacy-First Document Tools',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GlassPDF | Privacy First PDF Tools  Merge, Split, Compress and psd preview',
+    description: 'Privacy first PDF tools that run entirely in your browser. Merge, split, compress, view, and convert PDFs locally. No uploads. No servers. Fully secure.',
+    images: ['https://glasspdf.pages.dev/og-image.png'],
+  },
 };
 
 export default function RootLayout({
