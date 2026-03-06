@@ -57,8 +57,18 @@ export const ImageConverterTool: React.FC = () => {
         }
       }
       toast({ title: "Conversion Complete", description: "Your files have been processed." });
-    } catch (err) {
-      toast({ variant: "destructive", title: "Error", description: "Failed to convert images." });
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const totalMB = Math.round(files.reduce((s, f) => s + f.size, 0) / (1024 * 1024));
+      let description = "Image conversion failed. Try with different image files.";
+
+      if (totalMB > 100 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('buffer'))) {
+        description = `Conversion failed — total image data is ${totalMB}MB. Try converting fewer images at once.`;
+      } else if (msg.includes('decode') || msg.includes('image') || msg.includes('format')) {
+        description = "One or more images could not be decoded. Ensure they are valid PNG, JPG, or WebP files.";
+      }
+
+      toast({ variant: "destructive", title: "Error", description });
     } finally {
       setProcessing(false);
     }

@@ -43,11 +43,25 @@ export const ProtectTool: React.FC<ProtectToolProps> = ({ initialFile }) => {
 
       triggerDownload(result, `${mode === 'protect' ? 'protected' : 'unlocked'}_${sourceFile.name}`);
       toast({ title: "Security Applied", description: `File has been ${mode === 'protect' ? 'encrypted' : 'unlocked'}.` });
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const sizeMB = Math.round(sourceFile.size / (1024 * 1024));
+      let description = "Could not process this PDF.";
+
+      if (sizeMB > 50 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('range') || msg.includes('buffer'))) {
+        description = `Processing failed — this PDF is ${sizeMB}MB which may be too large for in-browser encryption. Try a smaller file.`;
+      } else if (mode === 'unlock' && (msg.includes('password') || msg.includes('decrypt') || msg.includes('incorrect'))) {
+        description = "Wrong password. Please check your credentials and try again.";
+      } else if (msg.includes('encrypt') || msg.includes('password')) {
+        description = "This PDF has an unsupported encryption format. Try re-exporting the PDF from its source application.";
+      } else {
+        description = `Document structure error${sizeMB > 30 ? ` (file is ${sizeMB}MB — try a smaller PDF)` : ''}. The file may be corrupted or use an unsupported format.`;
+      }
+
       toast({
         variant: "destructive",
         title: "Security Failed",
-        description: "Invalid credentials or document structure."
+        description,
       });
     } finally {
       setProcessing(false);

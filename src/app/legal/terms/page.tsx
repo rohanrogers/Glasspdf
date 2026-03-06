@@ -48,6 +48,9 @@ export default function TermsPage() {
                 <p>
                     GlassPDF is designed with the intention of prioritizing user privacy and local processing. Under intended operation, files processed using GlassPDF remain on the user&rsquo;s device and do not leave the device environment through intentional action by GlassPDF. GlassPDF does not intentionally collect, store, or transmit user file contents, including PDF documents, PSD images, or other supported file formats. However, GlassPDF makes no absolute guarantee against events arising from factors outside the intended software design, including but not limited to device compromise, malicious software, browser vulnerabilities, or operating system vulnerabilities.
                 </p>
+                <p>
+                    The Service may utilize privacy-respecting, cookie-free web analytics and standard search engine indexing tools to understand general usage patterns, improve performance, and ensure discoverability. Such analytics collect only aggregate, non-personal metrics such as page views, referral sources, browser type, and country-level geographic data. These tools do not track individual users, do not use cookies or local storage for identification, do not collect or access the content of any files processed through the Service, and do not create personal profiles. No personally identifiable information is intentionally collected or transmitted through these analytics mechanisms.
+                </p>
 
                 <h2>Modifications</h2>
                 <p>

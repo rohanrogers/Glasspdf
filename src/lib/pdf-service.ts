@@ -89,8 +89,10 @@ export const compressPDFDocument = async (
 };
 
 export const protectPDF = async (file: File, password: string): Promise<Uint8Array> => {
-  const pdf = await PDFDocument.load(await file.arrayBuffer());
-  (pdf as any).encrypt({
+  // Use the encryption-capable fork for password protection
+  const { PDFDocument: EncPDFDocument } = await import('pdf-lib-with-encrypt');
+  const pdf = await EncPDFDocument.load(await file.arrayBuffer());
+  pdf.encrypt({
     userPassword: password,
     ownerPassword: password,
     permissions: { printing: 'highResolution', modifying: true, copying: true },
@@ -99,7 +101,10 @@ export const protectPDF = async (file: File, password: string): Promise<Uint8Arr
 };
 
 export const unlockPDF = async (file: File, password: string): Promise<Uint8Array> => {
-  const pdf = await PDFDocument.load(await file.arrayBuffer(), { password } as any);
+  // Use the encryption-capable fork for proper password decryption
+  const { PDFDocument: EncPDFDocument } = await import('pdf-lib-with-encrypt');
+  const pdf = await EncPDFDocument.load(await file.arrayBuffer(), { password });
+  // Re-save without encryption to produce an unlocked copy
   return pdf.save(SAVE_OPTS);
 };
 

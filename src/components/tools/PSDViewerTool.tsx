@@ -74,10 +74,18 @@ export const PSDViewerTool: React.FC = () => {
         setZoom(ratio);
       }
     } catch (err: any) {
+      const msg = err?.message || '';
+      const sizeMB = Math.round(file.size / (1024 * 1024));
+      let description = msg || "Could not composite this PSD document.";
+
+      if (sizeMB > 50 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('range') || msg.includes('buffer'))) {
+        description = `Load failed — this PSD is ${sizeMB}MB which exceeded browser memory. Try a smaller file.`;
+      }
+
       toast({
         variant: "destructive",
         title: "Load Error",
-        description: err.message || "Could not composite this PSD document."
+        description,
       });
       setSourceFile(null);
     } finally {
@@ -96,8 +104,16 @@ export const PSDViewerTool: React.FC = () => {
         exportCanvasAsImage(renderResult.canvas, format, sourceFile.name);
       }
       toast({ title: "Studio Export", description: `File saved successfully as ${format.toUpperCase()}.` });
-    } catch (err) {
-      toast({ variant: "destructive", title: "Export Failed", description: "Memory limit exceeded during export composition." });
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const sizeMB = renderResult?.canvas ? Math.round((renderResult.canvas.width * renderResult.canvas.height * 4) / (1024 * 1024)) : 0;
+      let description = "Export failed. The file may be too complex for in-browser composition.";
+
+      if (sizeMB > 100 || msg.includes('memory') || msg.includes('alloc') || msg.includes('canvas')) {
+        description = `Export failed — canvas data is ~${sizeMB}MB in memory. Try reducing zoom or exporting a different format.`;
+      }
+
+      toast({ variant: "destructive", title: "Export Failed", description });
     } finally {
       setIsProcessing(false);
     }

@@ -50,11 +50,21 @@ export const CompressTool: React.FC<CompressToolProps> = ({ initialFile }) => {
           description: "Document structure was refreshed, but already matches peak optimization."
         });
       }
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const sizeMB = Math.round(sourceFile.size / (1024 * 1024));
+      let description = "Could not optimize this PDF. The file may be corrupted or use an unsupported structure.";
+
+      if (sizeMB > 100 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('range') || msg.includes('buffer'))) {
+        description = `Compression failed — this PDF is ${sizeMB}MB which may be too large for in-browser processing. Try a smaller file.`;
+      } else if (msg.includes('encrypt') || msg.includes('password')) {
+        description = "This PDF uses strong encryption that prevents re-bundling. Unlock it first using Security Studio.";
+      }
+
       toast({
         variant: "destructive",
         title: "Optimization Failed",
-        description: "The file could not be processed. It may be strongly encrypted or corrupted."
+        description,
       });
     } finally {
       setProcessing(false);

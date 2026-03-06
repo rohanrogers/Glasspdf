@@ -10,12 +10,14 @@ Your data belongs to you. GlassPDF guarantees zero data collection and zero serv
 
 ## Features
 
-- **Merge PDF**: Combine multiple documents seamlessly.
-- **Split PDF**: Extract pages into distinct files.
-- **Compress PDF**: Reduce file size without sacrificing clarity.
-- **Image Compressor**: Optimize images for web and print.
-- **PSD Preview**: View Adobe Photoshop documents directly in the browser.
-- **Page Rearrangement**: Reorder and organize PDF layouts effortlessly.
+- **Merge PDF**: Combine multiple documents seamlessly with drag-to-reorder.
+- **Split PDF**: Extract page ranges into distinct files with live previews.
+- **Compress PDF**: Reduce file size with structural re-bundling, zero pixel loss.
+- **PDF Viewer**: Immersive local document viewer with fullscreen, zoom, and text search.
+- **Security Studio**: Password-protect or unlock PDF documents with AES encryption.
+- **PSD Studio**: High-fidelity Adobe Photoshop previews with a 4-stage rendering engine.
+- **Image Converter**: Convert between PNG, JPG, WebP formats or combine images into PDF.
+- **Image Compressor**: Optimize images with a real-time quality slider and live preview.
 
 ## Technology
 

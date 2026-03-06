@@ -4,19 +4,13 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
   images: {
     unoptimized: true,
   },
   trailingSlash: false,
   output: 'export',
   serverExternalPackages: ['pdfjs-dist'],
-  webpack: (config) => {
-    config.externals = [...(config.externals || []), { canvas: 'commonjs canvas' }];
-    return config;
-  },
+  turbopack: {},
 };
 
 export default nextConfig;

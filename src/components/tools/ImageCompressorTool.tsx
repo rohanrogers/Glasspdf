@@ -107,8 +107,19 @@ export const ImageCompressorTool: React.FC = () => {
             setBitmap(bmp);
             setOriginalSize(origSize);
             setQuality(80);
-        } catch {
-            toast({ variant: 'destructive', title: 'Decode Error', description: 'Could not decode the image.' });
+        } catch (err: any) {
+            const msg = err?.message || '';
+            const sizeMB = Math.round(f.size / (1024 * 1024));
+            const isHEIC = /\.(heic|heif)$/i.test(f.name);
+            let description = "Could not decode the image.";
+
+            if (isHEIC) {
+                description = "Could not decode HEIC file. The image may be corrupted or use an unsupported HEIC variant.";
+            } else if (sizeMB > 50 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('buffer'))) {
+                description = `Image is ${sizeMB}MB — decoding failed, possibly due to browser memory limits. Try a smaller image.`;
+            }
+
+            toast({ variant: 'destructive', title: 'Decode Error', description });
             setFile(null);
         } finally {
             setDecoding(false);
@@ -144,8 +155,16 @@ export const ImageCompressorTool: React.FC = () => {
             a.click();
             URL.revokeObjectURL(url);
             toast({ title: 'Exported!', description: `Saved as ${fmt.toUpperCase()} — ${formatBytes(exportBlob.size)}` });
-        } catch {
-            toast({ variant: 'destructive', title: 'Export Failed', description: 'Could not export the image.' });
+        } catch (err: any) {
+            const msg = err?.message || '';
+            const dims = bitmap ? `${bitmap.width}×${bitmap.height}` : 'unknown';
+            let description = "Export failed. Try a different quality level or image.";
+
+            if (msg.includes('memory') || msg.includes('alloc') || msg.includes('canvas')) {
+                description = `Export failed — image resolution (${dims}) may exceed browser canvas limits. Try reducing quality or using a smaller image.`;
+            }
+
+            toast({ variant: 'destructive', title: 'Export Failed', description });
         } finally {
             setExporting(false);
         }

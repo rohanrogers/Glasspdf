@@ -79,19 +79,19 @@ export const renderPSDToCanvas = async (file: File): Promise<PSDRenderResult> =>
     if (psd.canvas) return buildResult(psd.canvas, 'high-fidelity', psd);
     const manual = compositeCanvasLayers(psd);
     if (manual) return buildResult(manual, 'high-fidelity', psd);
-  } catch (e: any) { console.warn('[PSD] Stage 1 failed:', e.message); }
+  } catch { /* Stage fallback */ }
 
   // Stage 2: Safe mode (skip linked files)
   try {
     const psd = readPsd(buffer, { skipThumbnail: true, skipLinkedFilesData: true, logMissingFeatures: true });
     if (psd.canvas) return buildResult(psd.canvas, 'safe-mode', psd);
-  } catch (e: any) { console.warn('[PSD] Stage 2 failed:', e.message); }
+  } catch { /* Stage fallback */ }
 
   // Stage 3: Composite-only fallback
   try {
     const psd = readPsd(buffer, { skipLayerImageData: true, skipThumbnail: true, skipLinkedFilesData: true });
     if (psd.canvas) return buildResult(psd.canvas, 'composite', psd);
-  } catch (e: any) { console.warn('[PSD] Stage 3 failed:', e.message); }
+  } catch { /* Stage fallback */ }
 
   throw new Error('Unsupported PSD structure. Try saving with "Maximize Compatibility" in Photoshop.');
 };

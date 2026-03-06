@@ -1,6 +1,6 @@
 {
   "name": "nextn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 9002",
@@ -21,9 +21,10 @@
     "framer-motion": "^11.11.17",
     "heic2any": "^0.0.4",
     "lucide-react": "^0.575.0",
-    "next": "15.5.9",
+    "next": "^16.1.6",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "3.11.174",
+    "pdf-lib-with-encrypt": "^1.2.1",
+    "pdfjs-dist": "^4.10.38",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "tailwind-merge": "^3.5.0",

@@ -77,8 +77,18 @@ export const PDFViewerTool: React.FC<PDFViewerToolProps> = ({ onExit, onSwitchTo
           setPdfDoc(pdf);
           setCurrentPage(1);
           setZoom(1.0);
-        } catch (err) {
-          toast({ variant: "destructive", title: "Load Failed", description: "This file is encrypted or invalid." });
+        } catch (err: any) {
+          const msg = err?.message || '';
+          const sizeMB = Math.round(sourceFile.size / (1024 * 1024));
+          let description = "Could not open this PDF. The file may be corrupted or not a valid PDF.";
+
+          if (msg.includes('encrypt') || msg.includes('password')) {
+            description = "This PDF is password-protected. Use Security Studio to unlock it first.";
+          } else if (sizeMB > 100 && (msg.includes('memory') || msg.includes('range') || msg.includes('buffer'))) {
+            description = `Could not load — this PDF is ${sizeMB}MB. Very large files may fail in the browser.`;
+          }
+
+          toast({ variant: "destructive", title: "Load Failed", description });
           setSourceFile(null);
         } finally {
           setIsLoading(false);

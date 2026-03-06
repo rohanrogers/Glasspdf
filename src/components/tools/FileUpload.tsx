@@ -41,13 +41,33 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       const exts = accept.split(',').map(a => a.trim().toLowerCase());
       files = files.filter(f => exts.some(ext => f.name.toLowerCase().endsWith(ext)));
     }
+    // Engine limit: block files >1GB (browser tab would crash regardless of server).
+    // Warn (but allow) files 500MB–1GB so users know it may be slow on low-RAM devices.
+    const GB = 1024 * 1024 * 1024;
+    const MB500 = 500 * 1024 * 1024;
+    const oversized = files.filter(f => f.size > GB);
+    if (oversized.length > 0) {
+      alert(`File too large: "${oversized[0].name}" exceeds 1GB. All processing is local, but your browser cannot handle files this large in memory.`);
+      files = files.filter(f => f.size <= GB);
+    }
+    const large = files.filter(f => f.size > MB500);
+    if (large.length > 0) {
+      // Non-blocking advisory — processing still starts
+      console.info(`Advisory: "${large[0].name}" is over 500MB. Processing is entirely local on your device — this may be slow on low-RAM machines.`);
+    }
     if (files.length > 0) {
       onFilesSelected(multiple ? files : [files[0]]);
     }
   }, [multiple, onFilesSelected, accept]);
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
+    let files = e.target.files ? Array.from(e.target.files) : [];
+    const GB = 1024 * 1024 * 1024;
+    const oversized = files.filter(f => f.size > GB);
+    if (oversized.length > 0) {
+      alert(`File too large: "${oversized[0].name}" exceeds 1GB. All processing is local, but your browser cannot handle files this large in memory.`);
+      files = files.filter(f => f.size <= GB);
+    }
     if (files.length > 0) {
       onFilesSelected(files);
     }

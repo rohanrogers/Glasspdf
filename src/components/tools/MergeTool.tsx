@@ -73,11 +73,21 @@ export const MergeTool: React.FC<MergeToolProps> = ({ initialFile }) => {
       const mergedBytes = await mergePDFDocuments(fileList.map(item => item.file));
       triggerDownload(mergedBytes, "merged_glasspdf.pdf");
       toast({ title: "Success", description: "Your PDF files have been merged successfully." });
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const totalMB = Math.round(fileList.reduce((s, f) => s + f.size, 0) / (1024 * 1024));
+      let description = "Could not merge — one or more files may be corrupted or use an unsupported PDF format.";
+
+      if (totalMB > 200 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('range') || msg.includes('buffer'))) {
+        description = `Merge failed — combined file size is ${totalMB}MB. Try merging fewer files or smaller PDFs.`;
+      } else if (msg.includes('encrypt') || msg.includes('password')) {
+        description = "One or more PDFs are password-protected. Unlock them first using Security Studio.";
+      }
+
       toast({
         variant: "destructive",
         title: "Operation Failed",
-        description: "An error occurred during the merge process. Ensure files are valid PDFs."
+        description,
       });
     } finally {
       setProcessing(false);

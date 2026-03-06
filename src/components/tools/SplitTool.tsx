@@ -92,8 +92,18 @@ export const SplitTool: React.FC<SplitToolProps> = ({ initialFile }) => {
           const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
           setTotalPageCount(pdf.numPages);
           setExtractionRanges([{ start: '1', end: pdf.numPages.toString(), id: crypto.randomUUID() }]);
-        } catch (e) {
-          toast({ variant: "destructive", title: "Read Error", description: "Could not read PDF metadata." });
+        } catch (e: any) {
+          const msg = e?.message || '';
+          const sizeMB = Math.round(sourceFile.size / (1024 * 1024));
+          let description = "Could not read PDF metadata. The file may be corrupted.";
+
+          if (msg.includes('encrypt') || msg.includes('password')) {
+            description = "This PDF is password-protected. Unlock it using Security Studio before splitting.";
+          } else if (sizeMB > 100 && (msg.includes('memory') || msg.includes('range'))) {
+            description = `Could not read metadata — this PDF is ${sizeMB}MB. Try a smaller file.`;
+          }
+
+          toast({ variant: "destructive", title: "Read Error", description });
           setSourceFile(null);
         }
       };
@@ -126,8 +136,18 @@ export const SplitTool: React.FC<SplitToolProps> = ({ initialFile }) => {
         });
       }
       toast({ title: "Success", description: "Files processed successfully." });
-    } catch (err) {
-      toast({ variant: "destructive", title: "Error", description: "Failed to process PDF." });
+    } catch (err: any) {
+      const msg = err?.message || '';
+      const sizeMB = Math.round(sourceFile.size / (1024 * 1024));
+      let description = "Could not split this PDF. The file may be corrupted or use an unsupported structure.";
+
+      if (sizeMB > 100 && (msg.includes('memory') || msg.includes('alloc') || msg.includes('range') || msg.includes('buffer'))) {
+        description = `Split failed — this PDF is ${sizeMB}MB which may be too large for in-browser processing. Try a smaller file.`;
+      } else if (msg.includes('encrypt') || msg.includes('password')) {
+        description = "This PDF is password-protected. Unlock it first using Security Studio.";
+      }
+
+      toast({ variant: "destructive", title: "Error", description });
     } finally {
       setIsProcessing(false);
     }
