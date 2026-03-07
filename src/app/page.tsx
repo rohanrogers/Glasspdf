@@ -5,36 +5,61 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { MergeTool } from '@/components/tools/MergeTool';
-import { SplitTool } from '@/components/tools/SplitTool';
-import { CompressTool } from '@/components/tools/CompressTool';
-import { ImageConverterTool } from '@/components/tools/ImageConverterTool';
-import { PDFViewerTool } from '@/components/tools/PDFViewerTool';
-import { PSDViewerTool } from '@/components/tools/PSDViewerTool';
-import { ProtectTool } from '@/components/tools/ProtectTool';
-import { ImageCompressorTool } from '@/components/tools/ImageCompressorTool';
+import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
 import { ArrowLeft, Layers, Scissors, Minimize2, Github, Image as ImageIcon, Eye, Lock, FileImage, Shrink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Footer } from '@/components/Footer';
+import { useTheme } from '@/lib/theme-provider';
+import { ToolLoader } from '@/components/ToolLoader';
+
+// Lazy-loaded tool components — each becomes its own code-split chunk
+const MergeTool = lazy(() => import('@/components/tools/MergeTool').then(m => ({ default: m.MergeTool })));
+const SplitTool = lazy(() => import('@/components/tools/SplitTool').then(m => ({ default: m.SplitTool })));
+const CompressTool = lazy(() => import('@/components/tools/CompressTool').then(m => ({ default: m.CompressTool })));
+const ImageConverterTool = lazy(() => import('@/components/tools/ImageConverterTool').then(m => ({ default: m.ImageConverterTool })));
+const PDFViewerTool = lazy(() => import('@/components/tools/PDFViewerTool').then(m => ({ default: m.PDFViewerTool })));
+const PSDViewerTool = lazy(() => import('@/components/tools/PSDViewerTool').then(m => ({ default: m.PSDViewerTool })));
+const ProtectTool = lazy(() => import('@/components/tools/ProtectTool').then(m => ({ default: m.ProtectTool })));
+const ImageCompressorTool = lazy(() => import('@/components/tools/ImageCompressorTool').then(m => ({ default: m.ImageCompressorTool })));
+
+// Preload all tool chunks in the background after page mount
+const preloadTools = () => {
+  import('@/components/tools/MergeTool');
+  import('@/components/tools/SplitTool');
+  import('@/components/tools/CompressTool');
+  import('@/components/tools/ImageConverterTool');
+  import('@/components/tools/PDFViewerTool');
+  import('@/components/tools/PSDViewerTool');
+  import('@/components/tools/ProtectTool');
+  import('@/components/tools/ImageCompressorTool');
+};
+
+// Per-tool preload map for hover-triggered loading
+const PRELOAD_MAP: Record<string, () => void> = {
+  merge: () => import('@/components/tools/MergeTool'),
+  split: () => import('@/components/tools/SplitTool'),
+  compress: () => import('@/components/tools/CompressTool'),
+  'image-converter': () => import('@/components/tools/ImageConverterTool'),
+  'pdf-viewer': () => import('@/components/tools/PDFViewerTool'),
+  'psd-viewer': () => import('@/components/tools/PSDViewerTool'),
+  protect: () => import('@/components/tools/ProtectTool'),
+  'image-compressor': () => import('@/components/tools/ImageCompressorTool'),
+};
 
 type ActiveTool = 'merge' | 'split' | 'compress' | 'image-compressor' | 'image-converter' | 'pdf-viewer' | 'psd-viewer' | 'protect' | null;
 
 export default function PDFWorkspace() {
   const [activeTool, setActiveTool] = useState<ActiveTool>(null);
   const [preloadedFile, setPreloadedFile] = useState<File | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme, setTheme } = useTheme();
 
+  // Preload all tool bundles 50ms after mount (during hero animation)
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
+    const t = setTimeout(preloadTools, 50);
+    return () => clearTimeout(t);
+  }, []);
 
   const availableTools = [
     {
@@ -127,9 +152,9 @@ export default function PDFWorkspace() {
             initial={{ y: -60, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -60, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             className="z-50 px-4 md:px-8 h-14 flex justify-between items-center backdrop-blur-3xl bg-white/60 dark:bg-black/20 border-b border-black/[0.04] dark:border-white/10 shrink-0"
-            style={{ WebkitBackdropFilter: 'blur(48px) saturate(180%)' }}
+            style={{ WebkitBackdropFilter: 'blur(48px) saturate(180%)', boxShadow: '0 1px 0 rgba(99, 102, 241, 0.06)' }}
           >
             <div
               className="flex items-center space-x-3 cursor-pointer group"
@@ -154,9 +179,11 @@ export default function PDFWorkspace() {
                   aria-label="Toggle theme"
                 />
               </div>
-              <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/[0.04] dark:hover:bg-white/10">
-                <Github className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-              </Button>
+              <a href="https://github.com/rohanrogers/Glasspdf" target="_blank" rel="noopener noreferrer">
+                <Button variant="ghost" size="icon" className="rounded-full hover:bg-black/[0.04] dark:hover:bg-white/10">
+                  <Github className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                </Button>
+              </a>
             </nav>
           </motion.header>
         )}
@@ -173,14 +200,14 @@ export default function PDFWorkspace() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], exit: { duration: 0.25 } }}
               className="max-w-6xl w-full text-center space-y-14 py-20"
             >
               <div className="space-y-5">
                 <motion.h2
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1, duration: 0.6 }}
+                  transition={{ delay: 0.05, duration: 0.4 }}
                   className="text-4xl sm:text-6xl md:text-8xl font-bold text-slate-800 dark:text-white tracking-tight leading-tight"
                 >
                   The liquid <br />
@@ -189,7 +216,7 @@ export default function PDFWorkspace() {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ delay: 0.15 }}
                   className="text-lg md:text-xl text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed px-4"
                 >
                   Local First. Privacy Always. Movement. <br className="hidden md:block" /> No uploads, no servers, just pure client-side magic.
@@ -202,11 +229,12 @@ export default function PDFWorkspace() {
                     key={tool.id}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.4 + (index * 0.08), duration: 0.5 }}
+                    transition={{ delay: 0.2 + (index * 0.05), duration: 0.4 }}
                     className="glass-card p-8 md:p-10 rounded-[2rem] cursor-pointer group flex flex-col items-center text-center space-y-5"
-                    onClick={() => setActiveTool(tool.id)}
+                    onMouseEnter={() => PRELOAD_MAP[tool.id]?.()}
+                    onClick={() => startTransition(() => setActiveTool(tool.id))}
                   >
-                    <div className={cn(tool.themeColor, "p-5 rounded-2xl shadow-lg dark:shadow-2xl dark:shadow-current/20 group-hover:-translate-y-1 group-hover:scale-105 transition-all duration-500 ease-out")}>
+                    <div className={cn(tool.themeColor, "p-5 rounded-2xl shadow-lg shadow-current/10 group-hover:shadow-current/25 dark:shadow-2xl dark:shadow-current/20 dark:group-hover:shadow-current/35 group-hover:-translate-y-1 group-hover:scale-105 transition-all duration-500 ease-out")}>
                       <tool.icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
                     </div>
                     <div className="space-y-1.5">
@@ -229,7 +257,7 @@ export default function PDFWorkspace() {
               initial={{ opacity: 0, scale: 0.98, filter: 'blur(8px)' }}
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
               exit={{ opacity: 0, scale: 1.01, filter: 'blur(8px)' }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1], exit: { duration: 0.25 } }}
               className={cn(
                 "w-full h-full flex flex-col min-h-0",
                 (activeTool !== 'pdf-viewer') && "max-w-7xl mx-auto p-4 md:p-6 lg:p-8"
@@ -262,7 +290,9 @@ export default function PDFWorkspace() {
                   "flex-1 flex flex-col min-h-0",
                   (activeTool !== 'pdf-viewer') && "overflow-y-auto custom-scrollbar"
                 )}>
-                  {renderActiveWorkspace()}
+                  <Suspense fallback={<ToolLoader />}>
+                    {renderActiveWorkspace()}
+                  </Suspense>
                 </div>
               </div>
             </motion.div>

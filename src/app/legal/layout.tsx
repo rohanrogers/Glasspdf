@@ -3,10 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useTheme } from '@/lib/theme-provider';
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
+    const { theme, setTheme } = useTheme();
+
     return (
-        <div className="min-h-[100dvh] bg-[#f5f0eb] dark:bg-[#0a0a0a] text-slate-800 dark:text-slate-100 font-body">
+        <div className="min-h-[100dvh] bg-background text-slate-800 dark:text-slate-100 font-body">
             {/* Header */}
             <header className="sticky top-0 z-50 px-4 md:px-8 h-14 flex justify-between items-center backdrop-blur-3xl bg-white/60 dark:bg-black/20 border-b border-black/[0.04] dark:border-white/10"
                 style={{ WebkitBackdropFilter: 'blur(48px) saturate(180%)' }}
@@ -21,13 +24,22 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
                     <h1 className="text-lg md:text-xl font-bold tracking-tight text-slate-800 dark:text-white group-hover:text-blue-500 dark:group-hover:text-orange-400 transition-all duration-300">GlassPDF</h1>
                 </Link>
 
-                <Link
-                    href="/"
-                    className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back to App
-                </Link>
+                <div className="flex items-center gap-4">
+                    <input
+                        type="checkbox"
+                        className="theme-checkbox"
+                        checked={theme === 'dark'}
+                        onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
+                        aria-label="Toggle theme"
+                    />
+                    <Link
+                        href="/"
+                        className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to App
+                    </Link>
+                </div>
             </header>
 
             {/* Page content */}
@@ -42,3 +54,4 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </div>
     );
 }
+
