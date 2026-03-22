@@ -6,7 +6,7 @@
 "use client";
 
 import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
-import { ArrowLeft, Layers, Scissors, Minimize2, Github, Image as ImageIcon, Eye, Lock, FileImage, Shrink } from 'lucide-react';
+import { ArrowLeft, Layers, Scissors, Minimize2, Github, Image as ImageIcon, Eye, Lock, FileImage, Shrink, LayoutGrid } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -23,6 +23,7 @@ const PDFViewerTool = lazy(() => import('@/components/tools/PDFViewerTool').then
 const PSDViewerTool = lazy(() => import('@/components/tools/PSDViewerTool').then(m => ({ default: m.PSDViewerTool })));
 const ProtectTool = lazy(() => import('@/components/tools/ProtectTool').then(m => ({ default: m.ProtectTool })));
 const ImageCompressorTool = lazy(() => import('@/components/tools/ImageCompressorTool').then(m => ({ default: m.ImageCompressorTool })));
+const PDFCanvasTool = lazy(() => import('@/components/tools/PDFCanvasTool').then(m => ({ default: m.PDFCanvasTool })));
 
 // Preload all tool chunks in the background after page mount
 const preloadTools = () => {
@@ -34,6 +35,7 @@ const preloadTools = () => {
   import('@/components/tools/PSDViewerTool');
   import('@/components/tools/ProtectTool');
   import('@/components/tools/ImageCompressorTool');
+  import('@/components/tools/PDFCanvasTool');
 };
 
 // Per-tool preload map for hover-triggered loading
@@ -46,9 +48,10 @@ const PRELOAD_MAP: Record<string, () => void> = {
   'psd-viewer': () => import('@/components/tools/PSDViewerTool'),
   protect: () => import('@/components/tools/ProtectTool'),
   'image-compressor': () => import('@/components/tools/ImageCompressorTool'),
+  'pdf-canvas': () => import('@/components/tools/PDFCanvasTool'),
 };
 
-type ActiveTool = 'merge' | 'split' | 'compress' | 'image-compressor' | 'image-converter' | 'pdf-viewer' | 'psd-viewer' | 'protect' | null;
+type ActiveTool = 'merge' | 'split' | 'compress' | 'image-compressor' | 'image-converter' | 'pdf-viewer' | 'psd-viewer' | 'protect' | 'pdf-canvas' | null;
 
 export default function PDFWorkspace() {
   const [activeTool, setActiveTool] = useState<ActiveTool>(null);
@@ -77,11 +80,11 @@ export default function PDFWorkspace() {
       themeColor: 'bg-indigo-500 dark:bg-amber-600'
     },
     {
-      id: 'compress' as const,
-      name: 'Compress PDF',
-      description: 'Reduce size while keeping crystal clear quality',
-      icon: Minimize2,
-      themeColor: 'bg-sky-500 dark:bg-orange-400'
+      id: 'pdf-canvas' as const,
+      name: 'PDF Canvas',
+      description: 'Drag, reorder, and combine pages from multiple PDFs',
+      icon: LayoutGrid,
+      themeColor: 'bg-violet-500 dark:bg-amber-500'
     },
     {
       id: 'psd-viewer' as const,
@@ -118,6 +121,13 @@ export default function PDFWorkspace() {
       icon: Lock,
       themeColor: 'bg-rose-500 dark:bg-amber-500'
     },
+    {
+      id: 'compress' as const,
+      name: 'Compress PDF',
+      description: 'Reduce size while keeping crystal clear quality',
+      icon: Minimize2,
+      themeColor: 'bg-cyan-500 dark:bg-orange-500'
+    },
   ];
 
   const handleToolSwitch = (toolId: ActiveTool, file?: File) => {
@@ -140,6 +150,7 @@ export default function PDFWorkspace() {
         />
       );
       case 'protect': return <ProtectTool initialFile={preloadedFile} />;
+      case 'pdf-canvas': return <PDFCanvasTool />;
       default: return null;
     }
   };

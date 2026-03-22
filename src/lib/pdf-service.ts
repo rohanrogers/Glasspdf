@@ -1,4 +1,4 @@
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, degrees } from 'pdf-lib';
 
 export interface PDFFileMetadata {
   file: File;
@@ -132,3 +132,39 @@ export const triggerDownload = (data: Uint8Array, fileName: string, type = 'appl
   a.click();
   URL.revokeObjectURL(url);
 };
+
+export interface CanvasPageEntry {
+  pdfIndex: number;
+  originalPageIndex: number;
+  rotation: number;
+}
+
+export const buildCanvasPDF = async (
+  sourceBuffers: Map<number, ArrayBuffer>,
+  pages: CanvasPageEntry[]
+): Promise<Uint8Array> => {
+  const loadedDocs = new Map<number, Awaited<ReturnType<typeof PDFDocument.load>>>();
+
+  // Load each unique source PDF once
+  for (const page of pages) {
+    if (!loadedDocs.has(page.pdfIndex)) {
+      const buf = sourceBuffers.get(page.pdfIndex);
+      if (!buf) throw new Error(`Source PDF #${page.pdfIndex} not found in memory.`);
+      loadedDocs.set(page.pdfIndex, await PDFDocument.load(buf));
+    }
+  }
+
+  const target = await PDFDocument.create();
+
+  for (const page of pages) {
+    const sourceDoc = loadedDocs.get(page.pdfIndex)!;
+    const [copiedPage] = await target.copyPages(sourceDoc, [page.originalPageIndex]);
+    if (page.rotation !== 0) {
+      copiedPage.setRotation(degrees(page.rotation));
+    }
+    target.addPage(copiedPage);
+  }
+
+  return target.save(SAVE_OPTS);
+};
+
